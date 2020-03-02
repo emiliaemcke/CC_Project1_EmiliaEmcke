@@ -1,0 +1,195 @@
+/*
+what i want to do:
+Create a series of unsatisfying scenes
+
+1) Ball travelieng across the screen but stopping right before exiting the screen
+2) Domino effect not falling 
+3) Egg yolk popping
+4) Piano incomplete octave, not pressing the 8th key
+5) Rainbow spinning wheel
+*/
+var scene; // changing between the different scenes
+var notecounter; // changing the notes 
+var xLoc; //X location for the ball (scene 1) 
+var increment; // increment for moving ball (scene 1) 
+var yLoc; // Y Location for the ball (scene 1) 
+var keychange; // use this in order to determine which shape is being changed 
+var x; //
+var y;
+
+function setup() {
+	createCanvas(600, 600);
+	scene=1;
+	background(100);
+	xLoc = 1;
+	yLoc=50;
+	increment = 2;
+	keychange = 0; 
+	notecounter = 0;
+	incr= 5;
+	ballwidth = 20;
+	ballheight = 20;
+	y= 0;
+}
+function draw() {
+
+	//incomplete ball movement 
+	if (scene ==1) { // If pattern is 1 than draw the first pattern 
+		if (xLoc <500) {
+		background ('#8CD1FF');
+		fill(255);
+		ellipse(xLoc, yLoc, 30, 30);
+			xLoc = xLoc + increment;
+		}
+	}
+			
+	
+	/*
+	ball missing can
+	For scene two I want to have the user press the space bar in order to try and 
+	get the ball in the can 
+	However, when the ball gets near the rim of the can - it misses
+	This can either happen by it going back up or it going to the left 
+	*/
+	if (scene ==2){
+		background ('#F43155');
+		trashcan(111,105,145,0,185)
+		if (keyIsPressed) {
+		x = width/2
+	ellipse(x,y,ballwidth,ballheight);
+  if (y <= 400) {
+  y = y + 5;
+	}
+	}
+}
+ //egg yolk popping
+if (scene ==3) { // If pattern is 1 than draw the first pattern 
+	background ('#594136');
+	pan('#49555E', 0, '#46474F');
+	egg(255,'#C27D2F','#FFB400',2,200);
+	if (keyIsPressed){
+	for  (var i=0;i<100; i++){	
+		fill('#FFB400');
+		ellipse (320-i,265, 100,50);
+	}
+	}
+}
+ 
+	if (scene ==4) {
+		if (keyIsPressed === true) {
+    fill('#7F96A6');
+  } else {
+    fill(255);
+		piano ('#6572BE', 255,0);
+		blackkeys(0,75);
+	}
+	}
+	/*
+	Sponge cleaning Screen
+	Wherever the rectangle was, it should leave a trace of white ( a bit bigger than
+	the sponge - but never fully be able to clean it ( one spot remains dirty)
+	*/
+if (scene ==5) { 
+	background('#95FF91');
+	sponge('#FFF191', '#FFCD63');
+}
+}
+function sponge (col,strk) {
+	fill(col);
+	stroke(strk);
+	rect(mouseX,mouseY,30,40);
+}
+function trashcan (r,g,b,strk,b2) {
+	fill(r,g,b);
+		stroke(strk);
+		beginShape();
+		vertex(255,600);
+		vertex(225,450);
+		vertex(375,450);
+		vertex(345,600);
+		endShape(CLOSE);
+		fill(r,g,b2);
+		ellipse(width/2,450,150,75);
+}
+
+	function piano (col,key,outline){
+		background (col); 
+		fill(key); // white keys (octave)
+		stroke(outline);
+		push(); // push for key translation 
+		for (var i= 0; i< 8; i++){
+			push() // push for color change 
+				if (i == notecounter && mouseIsPressed) {  
+					fill(200);
+				}
+				rect (0,0,75,400);
+			pop() // pop for color change 
+			translate(75,0);
+		}
+		pop(); // pop for key translation
+	}
+function blackkeys (bk,xtrans){
+		// black keys 
+		push(); // I was going to wrap this in a for loop but because the distances were different I decied to keep the translation as is
+		fill(bk);
+		rect (60,0,30,200);
+		translate(xtrans,0);
+		rect (60,0,30,200);
+		translate(150,0);
+		rect (60,0,30,200);
+		translate(xtrans,0);
+		rect (60,0,30,200);
+		translate(xtrans,0);
+		rect (60,0,30,200);
+		translate(150,0);
+		rect (60,0,15,200);
+		pop();
+				
+}
+function egg (col,outline,yolk,sw,transp){
+fill (col);
+	stroke(outline);
+	strokeWeight(sw);
+	ellipse(width/2, height/2, 400, 150); // egg white 
+	fill (col,transp);
+	noStroke();
+	ellipse(width/2, height/2, 410, 150); // egg white rim
+	ellipse(width/2, height/2, 420, 150);
+	fill(yolk);
+	ellipse (350, 250, 140,90); //egg yolk 
+	fill(col);
+	ellipse (390, 250, 10,5); // shine on the yolk 
+	ellipse (370, 240, 15,20); // shine on the yolk 
+}
+function pan (col,str,col2) {
+	fill(col);
+	stroke(str);
+	rect(275, 0, 55, 100);
+	fill(col);
+	stroke(str);
+	ellipse (300,300,600,500);
+	fill(col2);
+	noStroke();
+	ellipse (300,300,500,400);
+	
+}
+function mousePressed(){
+	if (scene != 4) { 
+		scene=scene+1;
+		if (scene== 4) { 
+			notecounter= 0;
+		}
+	}else{
+		if (notecounter < 6) {
+			notecounter++;
+			console.log(notecounter);
+		} else { 
+			scene ++;
+		}
+	}
+  if (scene > 5) { // if pattern is greater than 5 than go back to the first pattern
+    scene = 0;
+  }
+}
+
+
